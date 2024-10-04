@@ -10,10 +10,13 @@ import (
 // 这里定义些 常用常量 以便于外部直接使用
 var (
 	TAB = NewNeatjson("", "\t")
+	SP0 = NewNeatjson("", "")
 	SP1 = NewNeatjson("", " ")
 	SP2 = NewNeatjson("", "  ")
 	SP3 = NewNeatjson("", "   ")
 	SP4 = NewNeatjson("", "    ")
+
+	NOI = NewNeatjson("", "").setPrettyValue(false) //当使用这个转json时结果不换行
 )
 
 // Neatjson 该类中实现各种简单的语法糖，以便于把 golang struct 转换为 json string，以便于开发者（我自己）使用
@@ -21,19 +24,43 @@ var (
 type Neatjson struct {
 	prefix string
 	indent string
+	pretty bool //在转json时是否换行，当为false时不换行，还是用直接转的函数
 }
 
 func NewNeatjson(prefix string, indent string) *Neatjson {
-	return &Neatjson{prefix: prefix, indent: indent}
+	return &Neatjson{
+		prefix: prefix,
+		indent: indent,
+		pretty: true, //默认设置为换行的，因为这个包的主要目的是得到有换行的json，因此默认就是有换行的
+	}
 }
 
 // Bytes 把结构体转换为字节数组，跟 "json.Marshal" 类似的，只是这是带缩进的
 func (N *Neatjson) Bytes(v interface{}) ([]byte, error) {
-	data, err := json.MarshalIndent(v, N.prefix, N.indent)
-	if err != nil {
-		return nil, erero.Wro(err)
+	if N.useIndentLogic() {
+		data, err := json.MarshalIndent(v, N.prefix, N.indent)
+		if err != nil {
+			return nil, erero.Wro(err)
+		}
+		return data, nil
+	} else {
+		data, err := json.Marshal(v)
+		if err != nil {
+			return nil, erero.Wro(err)
+		}
+		return data, nil
 	}
-	return data, nil
+}
+
+// 结果是否需要换行，因为发现单独写个包处理不换行这件事其实没必要，就在这里使用标识位判定
+func (N *Neatjson) useIndentLogic() bool {
+	return N.pretty || N.prefix != "" || N.indent != ""
+}
+
+// 设置是否需要换行，这里使用非导出函数
+func (N *Neatjson) setPrettyValue(pretty bool) *Neatjson {
+	N.pretty = pretty
+	return N
 }
 
 // Sjson 把结构体转换为 string，但是由于 String 这个单词既不利于全局搜索（会干扰IDE索引）也不利于代码重构
@@ -67,11 +94,15 @@ func (N *Neatjson) SxS(s string) (string, error) {
 
 // BxB 把 json bytes 转换得到 neat json bytes
 func (N *Neatjson) BxB(data []byte) ([]byte, error) {
-	var ob bytes.Buffer
-	if err := json.Indent(&ob, data, N.prefix, N.indent); err != nil {
-		return data, erero.Wro(err)
+	if N.useIndentLogic() {
+		var ob bytes.Buffer
+		if err := json.Indent(&ob, data, N.prefix, N.indent); err != nil {
+			return data, erero.Wro(err)
+		}
+		return ob.Bytes(), nil
+	} else {
+		return data, nil
 	}
-	return ob.Bytes(), nil
 }
 
 // SxB 把 json bytes 转换得到 neat json string. "x" means "from".
