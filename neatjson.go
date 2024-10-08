@@ -17,6 +17,8 @@ var (
 	SP4 = NewNeatjson("", "    ")
 
 	NOI = NewNeatjson("", "").setPrettyValue(false) //当使用这个转json时结果不换行
+
+	NON = NOI //换个名字有利于身心健康
 )
 
 // Neatjson 该类中实现各种简单的语法糖，以便于把 golang struct 转换为 json string，以便于开发者（我自己）使用
