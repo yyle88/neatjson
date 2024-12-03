@@ -28,12 +28,6 @@ func TestNeatjson_Sjson(t *testing.T) {
 	t.Log(res)
 }
 
-func TestNeatjson_SP0_Sjson(t *testing.T) {
-	res, err := SP0.Sjson(caseExample)
-	require.NoError(t, err)
-	t.Log(res)
-}
-
 func TestNeatjson_NOI_Sjson(t *testing.T) {
 	res, err := NOI.Sjson(caseExample)
 	require.NoError(t, err)
@@ -47,9 +41,9 @@ func TestNeatjson_SxS(t *testing.T) {
 	t.Log(res)
 }
 
-func TestNeatjson_NOI_SxS(t *testing.T) {
+func TestNeatjson_NON_SxS(t *testing.T) {
 	arg := `{"a": "abc","n": 123}`
-	res, err := NOI.SxS(arg)
+	res, err := NON.SxS(arg)
 	require.NoError(t, err)
 	t.Log(res)
 }

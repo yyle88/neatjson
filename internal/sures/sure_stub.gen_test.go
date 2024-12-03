@@ -10,58 +10,58 @@ import (
 )
 
 func TestGenSoft(t *testing.T) {
-	param := cls_stub_gen.NewParam(&neatjson.Neatjson_Soft{}, "neatjson.TAB.Soft()")
+	stubParam := cls_stub_gen.NewStubParam(&neatjson.Neatjson_Soft{}, "neatjson.TAB.Soft()")
 
-	sourceDIRPath := runpath.PARENT.Join("./../../../neatjson")
-	t.Log(sourceDIRPath)
+	sourceRootPath := runpath.PARENT.Join("./../../../neatjson")
+	t.Log(sourceRootPath)
 
-	targetSrcPath := runpath.PARENT.Join("./../../neatjsons/neatjsons.go")
-	t.Log(targetSrcPath)
+	outputPath := runpath.PARENT.Join("./../../neatjsons/neatjsons.go")
+	t.Log(outputPath)
 
-	cfg := &cls_stub_gen.Config{
-		SrcRoot:       sourceDIRPath,
-		TargetPkgName: "neatjsons",
-		ImportOptions: syntaxgo_ast.NewPackageImportOptions(),
-		TargetSrcPath: targetSrcPath,
-		CanCreateFile: false,
+	config := &cls_stub_gen.StubGenConfig{
+		SourceRootPath:    sourceRootPath,
+		TargetPackageName: "neatjsons",
+		ImportOptions:     syntaxgo_ast.NewPackageImportOptions(),
+		OutputPath:        outputPath,
+		AllowFileCreation: false,
 	}
-	cls_stub_gen.Gen(cfg, param)
+	cls_stub_gen.GenerateStubs(config, stubParam)
 }
 
 func TestGenMust(t *testing.T) {
-	param := cls_stub_gen.NewParam(&neatjson.Neatjson_Soft{}, "neatjson.TAB.Must()")
+	stubParam := cls_stub_gen.NewStubParam(&neatjson.Neatjson_Soft{}, "neatjson.TAB.Must()")
 
-	sourceDIRPath := runpath.PARENT.Join("./../../../neatjson")
-	t.Log(sourceDIRPath)
+	sourceRootPath := runpath.PARENT.Join("./../../../neatjson")
+	t.Log(sourceRootPath)
 
-	targetSrcPath := runpath.PARENT.Join("./../../neatjsonm/neatjsonm.go")
-	t.Log(targetSrcPath)
+	outputPath := runpath.PARENT.Join("./../../neatjsonm/neatjsonm.go")
+	t.Log(outputPath)
 
-	cfg := &cls_stub_gen.Config{
-		SrcRoot:       sourceDIRPath,
-		TargetPkgName: "neatjsonm",
-		ImportOptions: syntaxgo_ast.NewPackageImportOptions(),
-		TargetSrcPath: targetSrcPath,
-		CanCreateFile: false,
+	config := &cls_stub_gen.StubGenConfig{
+		SourceRootPath:    sourceRootPath,
+		TargetPackageName: "neatjsonm",
+		ImportOptions:     syntaxgo_ast.NewPackageImportOptions(),
+		OutputPath:        outputPath,
+		AllowFileCreation: false,
 	}
-	cls_stub_gen.Gen(cfg, param)
+	cls_stub_gen.GenerateStubs(config, stubParam)
 }
 
 func TestGenOmit(t *testing.T) {
-	param := cls_stub_gen.NewParam(&neatjson.Neatjson_Soft{}, "neatjson.TAB.Omit()")
+	stubParam := cls_stub_gen.NewStubParam(&neatjson.Neatjson_Soft{}, "neatjson.TAB.Omit()")
 
-	sourceDIRPath := runpath.PARENT.Join("./../../../neatjson")
-	t.Log(sourceDIRPath)
+	sourceRootPath := runpath.PARENT.Join("./../../../neatjson")
+	t.Log(sourceRootPath)
 
-	targetSrcPath := runpath.PARENT.Join("./../../neatjsono/neatjsono.go")
-	t.Log(targetSrcPath)
+	outputPath := runpath.PARENT.Join("./../../neatjsono/neatjsono.go")
+	t.Log(outputPath)
 
-	cfg := &cls_stub_gen.Config{
-		SrcRoot:       sourceDIRPath,
-		TargetPkgName: "neatjsono",
-		ImportOptions: syntaxgo_ast.NewPackageImportOptions(),
-		TargetSrcPath: targetSrcPath,
-		CanCreateFile: false,
+	config := &cls_stub_gen.StubGenConfig{
+		SourceRootPath:    sourceRootPath,
+		TargetPackageName: "neatjsono",
+		ImportOptions:     syntaxgo_ast.NewPackageImportOptions(),
+		OutputPath:        outputPath,
+		AllowFileCreation: false,
 	}
-	cls_stub_gen.Gen(cfg, param)
+	cls_stub_gen.GenerateStubs(config, stubParam)
 }
