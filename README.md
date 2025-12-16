@@ -1,7 +1,7 @@
 [![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/yyle88/neatjson/release.yml?branch=main&label=BUILD)](https://github.com/yyle88/neatjson/actions/workflows/release.yml?query=branch%3Amain)
 [![GoDoc](https://pkg.go.dev/badge/github.com/yyle88/neatjson)](https://pkg.go.dev/github.com/yyle88/neatjson)
 [![Coverage Status](https://img.shields.io/coveralls/github/yyle88/neatjson/main.svg)](https://coveralls.io/github/yyle88/neatjson?branch=main)
-[![Supported Go Versions](https://img.shields.io/badge/Go-1.22--1.25-lightgrey.svg)](https://go.dev/)
+[![Supported Go Versions](https://img.shields.io/badge/Go-1.24+-lightgrey.svg)](https://go.dev/)
 [![GitHub Release](https://img.shields.io/github/release/yyle88/neatjson.svg)](https://github.com/yyle88/neatjson/releases)
 [![Go Report Card](https://goreportcard.com/badge/github.com/yyle88/neatjson)](https://goreportcard.com/report/github.com/yyle88/neatjson)
 
@@ -12,18 +12,20 @@
 ---
 
 <!-- TEMPLATE (EN) BEGIN: LANGUAGE NAVIGATION -->
+
 ## CHINESE README
 
 [中文说明](README.zh.md)
+
 <!-- TEMPLATE (EN) END: LANGUAGE NAVIGATION -->
 
 ## Main Features
 
-🎨 **Flexible Indentation Options**: Choose from TAB, spaces (0-4), or custom indentation styles
-⚡ **Error Handling Modes**: Must (panic), Soft (log), or Omit (silent) - pick the mode that fits context
-🔄 **Bidirectional Formatting**: Format both Go structures and raw JSON data (strings/bytes)
-📦 **Convenience Wrappers**: Auto-generated packages with sensible defaults for rapid development
-🛠️ **Type-Safe API**: Clean, chainable interface with compile-time safety
+🎨 **Flexible Indentation Options**: Choose from TAB, spaces (0-4), and custom indentation styles
+⚡ **Exception Handling Modes**: Must (panic), Soft (log), and Omit (silent) - pick the mode that fits context
+🔄 **Struct & JSON Formatting**: Format both Go structures and raw JSON data (strings/bytes)
+📦 **Convenience Packages**: Auto-generated packages with sensible defaults
+🛠️ **Type-Safe API**: Clean, chainable interface with compile-time checks
 
 ## Installation
 
@@ -85,58 +87,68 @@ func main() {
 ### Convenience Packages
 
 **neatjsons - Must mode:**
+
 ```go
 import "github.com/yyle88/neatjson/neatjsons"
-json := neatjsons.S(data)  // panic on error
+json := neatjsons.S(data)  // panic on failure
 ```
 
 **neatjsono - Omit mode:**
+
 ```go
 import "github.com/yyle88/neatjson/neatjsono"
-json := neatjsono.S(data)  // silent on error
+json := neatjsono.S(data)  // silent on failure
 ```
 
 **neatjsonz - Soft mode:**
+
 ```go
 import "github.com/yyle88/neatjson/neatjsonz"
-json := neatjsonz.S(data)  // log on error
+json := neatjsonz.S(data)  // log on failure
 ```
 
 ### Indentation Options
 
 **TAB indentation (default):**
+
 ```go
 result := neatjson.TAB.Must().S(data)
 ```
 
 **No indentation (compact):**
+
 ```go
 result := neatjson.NOI.Must().S(data)
 ```
 
 **2-space indentation:**
+
 ```go
 result := neatjson.SP2.Must().S(data)
 ```
 
 **4-space indentation:**
+
 ```go
 result := neatjson.SP4.Must().S(data)
 ```
 
-### Error Handling Modes
+### Exception Handling Modes
 
-**Must mode - panic on error:**
+**Must mode - panic on exception:**
+
 ```go
 result := neatjson.TAB.Must().S(data)
 ```
 
-**Soft mode - log error and return empty:**
+**Soft mode - log and give blank:**
+
 ```go
 result := neatjson.TAB.Soft().S(data)
 ```
 
-**Omit mode - silently return empty:**
+**Omit mode - silent, give blank:**
+
 ```go
 result := neatjson.TAB.Omit().S(data)
 ```
@@ -144,21 +156,25 @@ result := neatjson.TAB.Omit().S(data)
 ### Format Raw JSON Data
 
 **String to String:**
+
 ```go
 formatted := neatjson.TAB.Must().SxS(`{"compact":"json"}`)
 ```
 
 **Bytes to Bytes:**
+
 ```go
 formatted := neatjson.SP2.Must().BxB([]byte(`{"raw":"data"}`))
 ```
 
 **Bytes to String:**
+
 ```go
 formatted := neatjson.TAB.Must().SxB(jsonBytes)
 ```
 
 **String to Bytes:**
+
 ```go
 formatted := neatjson.SP4.Must().BxS(jsonString)
 ```
@@ -166,6 +182,7 @@ formatted := neatjson.SP4.Must().BxS(jsonString)
 ### Convert to JSON Bytes
 
 **Go struct to JSON bytes:**
+
 ```go
 type User struct {
 	Name    string `json:"name"`
@@ -175,31 +192,78 @@ user := User{Name: "Alice", Mailbox: "alice@example.com"}
 jsonBytes := neatjson.SP4.Must().B(user)
 ```
 
-### Error Handling with Return Values
+### Exception Handling with Return Values
 
-**Chain with error handling:**
+**Chain with exception handling:**
+
 ```go
 result, err := neatjson.TAB.S(complexData)
 if err != nil {
-	// Handle error
+	// Handle exception
 }
 ```
 
+## API Reference
+
+### Indentation Constants
+
+| Constant | Description               |
+| -------- | ------------------------- |
+| `TAB`    | Tab indentation           |
+| `SP0`    | No indentation            |
+| `SP1`    | 1-space indentation       |
+| `SP2`    | 2-space indentation       |
+| `SP3`    | 3-space indentation       |
+| `SP4`    | 4-space indentation       |
+| `NOI`    | Compact JSON (no indent)  |
+| `NON`    | Compact JSON (no newline) |
+
+### Neatjson Methods
+
+| Method                    | Description           |
+| ------------------------- | --------------------- |
+| `S(v)` / `Sjson(v)`       | Struct to JSON string |
+| `B(v)` / `Bytes(v)`       | Struct to JSON bytes  |
+| `SxS(s)`                  | Reformat JSON string  |
+| `BxB(data)`               | Reformat JSON bytes   |
+| `SxB(data)` / `B2S(data)` | JSON bytes to string  |
+| `BxS(data)` / `S2B(data)` | JSON string to bytes  |
+
+### Handling Modes
+
+| Method   | Description        |
+| -------- | ------------------ |
+| `Must()` | Panic on exception |
+| `Soft()` | Log and give blank |
+| `Omit()` | Silent, give blank |
+
+### Design Notes
+
+**Reformat methods keep source input on exception:**
+
+`SxS`/`BxB`/`SxB`/`BxS` pass back source input plus exception when receiving invalid JSON. No data loss.
+
+```go
+invalidJSON := `{"name": "test",}`  // trailing comma - invalid
+result, e := neatjson.TAB.SxS(invalidJSON)
+// e != nil, result == invalidJSON (source input kept safe)
+```
+
 <!-- TEMPLATE (EN) BEGIN: STANDARD PROJECT FOOTER -->
-<!-- VERSION 2025-09-26 07:39:27.188023 +0000 UTC -->
+<!-- VERSION 2025-11-25 03:52:28.131064 +0000 UTC -->
 
 ## 📄 License
 
-MIT License. See [LICENSE](LICENSE).
+MIT License - see [LICENSE](LICENSE).
 
 ---
 
-## 🤝 Contributing
+## 💬 Contact & Feedback
 
 Contributions are welcome! Report bugs, suggest features, and contribute code:
 
-- 🐛 **Found a mistake?** Open an issue on GitHub with reproduction steps
-- 💡 **Have a feature idea?** Create an issue to discuss the suggestion
+- 🐛 **Mistake reports?** Open an issue on GitHub with reproduction steps
+- 💡 **Fresh ideas?** Create an issue to discuss
 - 📖 **Documentation confusing?** Report it so we can improve
 - 🚀 **Need new features?** Share the use cases to help us understand requirements
 - ⚡ **Performance issue?** Help us optimize through reporting slow operations
@@ -220,7 +284,7 @@ New code contributions, follow this process:
 4. **Branch**: Create a feature branch (`git checkout -b feature/xxx`).
 5. **Code**: Implement the changes with comprehensive tests
 6. **Testing**: (Golang project) Ensure tests pass (`go test ./...`) and follow Go code style conventions
-7. **Documentation**: Update documentation to support client-facing changes and use significant commit messages
+7. **Documentation**: Update documentation to support client-facing changes
 8. **Stage**: Stage changes (`git add .`)
 9. **Commit**: Commit changes (`git commit -m "Add feature xxx"`) ensuring backward compatible code
 10. **Push**: Push to the branch (`git push origin feature/xxx`).

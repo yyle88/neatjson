@@ -19,7 +19,7 @@ import (
 )
 
 // TestGenSoft generates the neatjsons package with Soft handling mode
-// Creates wrap functions returning zero-value results on errors without panicking
+// Creates wrap functions returning zero-value results on failure without panicking
 // Updates neatjsons/neatjsons.go with auto-generated code allowing convenient usage
 //
 // TestGenSoft 生成带有 Soft 处理模式的 neatjsons 包
@@ -45,7 +45,7 @@ func TestGenSoft(t *testing.T) {
 }
 
 // TestGenMust generates the neatjsonm package with Must handling mode
-// Creates wrap functions that panic on errors providing fast-exit action
+// Creates wrap functions that panic on failure providing fast-exit action
 // Updates neatjsonm/neatjsonm.go with auto-generated code suited to main operations
 //
 // TestGenMust 生成带有 Must 处理模式的 neatjsonm 包

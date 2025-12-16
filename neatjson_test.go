@@ -94,3 +94,39 @@ func TestNeatjson_BxB(t *testing.T) {
 	require.NoError(t, err)
 	t.Log(string(res))
 }
+
+// TestNeatjson_BxB_InvalidJSON checks that BxB returns original input on invalid JSON
+// This ensures the design rule: reformat methods return original input on exception
+//
+// TestNeatjson_BxB_InvalidJSON 检查 BxB 在无效 JSON 时返回原始输入
+// 确保设计规则：重新格式化方法在异常时返回原始输入
+func TestNeatjson_BxB_InvalidJSON(t *testing.T) {
+	// Invalid JSON: missing closing brace
+	// 无效 JSON：缺少右大括号
+	invalidJSON := []byte(`{"name": "test", "age": 30`)
+
+	res, err := TAB.BxB(invalidJSON)
+	require.Error(t, err)
+	// Must return original input, not nil or blank
+	// 必须返回原始输入，而不是 nil 或空白
+	require.Equal(t, invalidJSON, res)
+	t.Log("Returned original input on exception:", string(res))
+}
+
+// TestNeatjson_SxS_InvalidJSON checks that SxS returns original input on invalid JSON
+// This ensures the design rule: reformat methods return original input on exception
+//
+// TestNeatjson_SxS_InvalidJSON 检查 SxS 在无效 JSON 时返回原始输入
+// 确保设计规则：重新格式化方法在异常时返回原始输入
+func TestNeatjson_SxS_InvalidJSON(t *testing.T) {
+	// Invalid JSON: trailing comma
+	// 无效 JSON：尾随逗号
+	invalidJSON := `{"name": "test",}`
+
+	res, err := SP2.SxS(invalidJSON)
+	require.Error(t, err)
+	// Must return original input, not blank string
+	// 必须返回原始输入，而不是空字符串
+	require.Equal(t, invalidJSON, res)
+	t.Log("Returned original input on exception:", res)
+}

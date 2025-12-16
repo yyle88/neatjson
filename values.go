@@ -12,7 +12,14 @@ var (
 	SP2 = NewNeatjson("", "  ")   // SP2 uses 2 spaces for indentation // SP2 使用 2 个空格缩进
 	SP3 = NewNeatjson("", "   ")  // SP3 uses 3 spaces for indentation // SP3 使用 3 个空格缩进
 	SP4 = NewNeatjson("", "    ") // SP4 uses 4 spaces for indentation // SP4 uses 4 个空格缩进
+)
 
-	NOI = notNeatjson() // NOI produces compact JSON without line breaks (No Indent) // NOI 生成紧凑的 JSON 不换行（无缩进）
-	NON = notNeatjson() // NON produces compact JSON without line breaks (No Newline) // NON 生成紧凑的 JSON 不换行（无换行符）
+// Compact JSON constants using Compactjson type
+// These produce truly compact JSON without any whitespace
+//
+// 紧凑 JSON 常量，使用 Compactjson 类型
+// 生成真正紧凑的 JSON，不包含任何空白
+var (
+	NOI = NewCompactjson() // NOI produces compact JSON without line breaks (No Indent) // NOI 生成紧凑的 JSON 不换行（无缩进）
+	NON = NewCompactjson() // NON produces compact JSON without line breaks (No Indent) // NON 生成紧凑的 JSON 不换行（无缩进）
 )

@@ -16,80 +16,41 @@ import (
 	"github.com/yyle88/erero"
 )
 
-// Neatjson implements syntax helpers to convert Go structs into JSON
-// Provides neat indented JSON with customizable formatting options
+// Neatjson implements syntax helpers to convert Go structs into formatted JSON
+// Provides neat indented JSON with customizable prefix and indent options
 // Supports struct marshaling and JSON reformatting
 //
-// Neatjson 实现将 Go 结构体转换为 JSON 的语法辅助
-// 提供整齐的带缩进 JSON，具有可自定义格式化选项
+// Neatjson 实现将 Go 结构体转换为格式化 JSON 的语法辅助
+// 提供整齐的带缩进 JSON，具有可自定义前缀和缩进选项
 // 支持结构体编组和 JSON 重新格式化
 type Neatjson struct {
 	prefix string // Prefix for JSON indentation // 结果 JSON 的缩进前缀
 	indent string // Indentation characters // 缩进字符
-	active bool   // Enable line breaks when converting to JSON // 是否使用缩进的转换函数
 }
 
 // NewNeatjson creates Neatjson with specified prefix and indent
-// Returns instance with line breaks enabled as default setting
+// Returns instance for producing formatted JSON output
 //
 // NewNeatjson 根据指定的前缀和缩进字符创建 Neatjson 实例
-// 返回默认启用换行的实例
+// 返回用于生成格式化 JSON 输出的实例
 func NewNeatjson(prefix string, indent string) *Neatjson {
 	return &Neatjson{
 		prefix: prefix,
 		indent: indent,
-		active: true, // Default to using line breaks because the main purpose of this package is to create indented JSON // 默认启用换行，因为这个包的主要目的就是生成带缩进的 JSON
 	}
 }
 
-// notNeatjson returns Neatjson with line breaks disabled
-// Used inside package code to create NON and NOI constants
+// Bytes converts struct to JSON bytes with indentation
+// Uses json.MarshalIndent with configured prefix and indent
 //
-// notNeatjson 返回禁用换行的 Neatjson 实例
-// 用于包内代码创建 NON 和 NOI 常量
-func notNeatjson() *Neatjson {
-	return NewNeatjson("", "").withActive(false)
-}
-
-// Bytes converts struct to JSON bytes with indentation when configured
-// Like json.Marshal but supports custom formatting
-// Auto selects MarshalIndent vs Marshal based on settings
-//
-// Bytes 将结构体转换为 JSON 字节数组，配置时支持缩进
-// 类似 json.Marshal，但支持自定义格式化
-// 根据配置自动选择 MarshalIndent 与 Marshal
+// Bytes 将结构体转换为带缩进的 JSON 字节数组
+// 使用配置的前缀和缩进调用 json.MarshalIndent
 func (N *Neatjson) Bytes(v interface{}) ([]byte, error) {
-	if N.needIndent() {
-		data, err := json.MarshalIndent(v, N.prefix, N.indent)
-		if err != nil {
-			return nil, erero.Wro(err)
-		}
-		return data, nil
-	}
-	data, err := json.Marshal(v)
+	data, err := json.MarshalIndent(v, N.prefix, N.indent)
 	if err != nil {
 		return nil, erero.Wro(err)
 	}
 	return data, nil
-}
-
-// needIndent checks if indentation is needed
-// Returns true when active flag is set, prefix/indent configured
-//
-// needIndent 检查是否需要缩进
-// 当 active 标志开启、前缀/缩进已配置时返回 true
-func (N *Neatjson) needIndent() bool {
-	return N.active || N.prefix != "" || N.indent != ""
-}
-
-// withActive sets if line breaks are enabled
-// Returns instance allowing method chaining
-//
-// withActive 设置是否启用换行
-// 返回实例以支持方法链式调用
-func (N *Neatjson) withActive(active bool) *Neatjson {
-	N.active = active
-	return N
 }
 
 // Sjson converts struct to JSON string with desired formatting
@@ -135,21 +96,16 @@ func (N *Neatjson) SxS(s string) (string, error) {
 }
 
 // BxB converts JSON bytes to formatted JSON bytes
-// Reformats existing JSON using json.Indent when configured
-// Returns source bytes unchanged when indentation disabled
+// Reformats existing JSON using json.Indent with configured prefix and indent
 //
 // BxB 将 JSON 字节转换为格式化的 JSON 字节
-// 配置时使用 json.Indent 重新格式化现有 JSON
-// 禁用缩进时返回未更改的源字节
+// 使用配置的前缀和缩进通过 json.Indent 重新格式化现有 JSON
 func (N *Neatjson) BxB(data []byte) ([]byte, error) {
-	if N.needIndent() {
-		var result bytes.Buffer
-		if err := json.Indent(&result, data, N.prefix, N.indent); err != nil {
-			return data, erero.Wro(err)
-		}
-		return result.Bytes(), nil
+	var result bytes.Buffer
+	if err := json.Indent(&result, data, N.prefix, N.indent); err != nil {
+		return data, erero.Wro(err)
 	}
-	return data, nil
+	return result.Bytes(), nil
 }
 
 // SxB converts JSON bytes to string (x means from)

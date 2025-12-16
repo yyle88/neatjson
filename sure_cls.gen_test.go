@@ -37,5 +37,5 @@ func TestGen(t *testing.T) {
 
 	// Generate wrap classes supplying each handling mode
 	// 为每种处理模式生成包装类
-	sure_cls_gen.GenerateClasses(config, Neatjson{})
+	sure_cls_gen.GenerateClasses(config, Neatjson{}, Compactjson{})
 }

@@ -1,7 +1,7 @@
 [![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/yyle88/neatjson/release.yml?branch=main&label=BUILD)](https://github.com/yyle88/neatjson/actions/workflows/release.yml?query=branch%3Amain)
 [![GoDoc](https://pkg.go.dev/badge/github.com/yyle88/neatjson)](https://pkg.go.dev/github.com/yyle88/neatjson)
 [![Coverage Status](https://img.shields.io/coveralls/github/yyle88/neatjson/main.svg)](https://coveralls.io/github/yyle88/neatjson?branch=main)
-[![Supported Go Versions](https://img.shields.io/badge/Go-1.22--1.25-lightgrey.svg)](https://go.dev/)
+[![Supported Go Versions](https://img.shields.io/badge/Go-1.24+-lightgrey.svg)](https://go.dev/)
 [![GitHub Release](https://img.shields.io/github/release/yyle88/neatjson.svg)](https://github.com/yyle88/neatjson/releases)
 [![Go Report Card](https://goreportcard.com/badge/github.com/yyle88/neatjson)](https://goreportcard.com/report/github.com/yyle88/neatjson)
 
@@ -12,18 +12,20 @@
 ---
 
 <!-- TEMPLATE (ZH) BEGIN: LANGUAGE NAVIGATION -->
+
 ## 英文文档
 
 [ENGLISH README](README.md)
+
 <!-- TEMPLATE (ZH) END: LANGUAGE NAVIGATION -->
 
 ## 核心特性
 
-🎨 **灵活的缩进选项**: 可选择 TAB、空格 (0-4) 或自定义缩进样式
-⚡ **错误处理模式**: Must (panic)、Soft (log) 或 Omit (silent) - 根据上下文选择适合的模式
-🔄 **双向格式化**: 支持格式化 Go 结构体和原始 JSON 数据（字符串/字节）
-📦 **便捷封装包**: 自动生成的包，具有合理的默认值，便于快速开发
-🛠️ **类型安全 API**: 简洁的链式接口，具备编译时安全检查
+🎨 **灵活的缩进选项**: 可选择 TAB、空格 (0-4) 和自定义缩进样式
+⚡ **异常处理模式**: Must (panic)、Soft (log) 和 Omit (silent) - 根据上下文选择适合的模式
+🔄 **结构体与 JSON 格式化**: 支持格式化 Go 结构体和原始 JSON 数据（字符串/字节）
+📦 **便捷封装包**: 自动生成的包，具有合理的默认值
+🛠️ **类型安全 API**: 简洁的链式接口，具备编译时检查
 
 ## 安装
 
@@ -85,18 +87,21 @@ func main() {
 ### 便捷封装包
 
 **neatjsons - Must 模式：**
+
 ```go
 import "github.com/yyle88/neatjson/neatjsons"
 json := neatjsons.S(data)  // 出错时 panic
 ```
 
 **neatjsono - Omit 模式：**
+
 ```go
 import "github.com/yyle88/neatjson/neatjsono"
 json := neatjsono.S(data)  // 出错时静默
 ```
 
 **neatjsonz - Soft 模式：**
+
 ```go
 import "github.com/yyle88/neatjson/neatjsonz"
 json := neatjsonz.S(data)  // 出错时记录日志
@@ -105,38 +110,45 @@ json := neatjsonz.S(data)  // 出错时记录日志
 ### 缩进选项
 
 **TAB 缩进（默认）：**
+
 ```go
 result := neatjson.TAB.Must().S(data)
 ```
 
 **无缩进（紧凑格式）：**
+
 ```go
 result := neatjson.NOI.Must().S(data)
 ```
 
 **2 空格缩进：**
+
 ```go
 result := neatjson.SP2.Must().S(data)
 ```
 
 **4 空格缩进：**
+
 ```go
 result := neatjson.SP4.Must().S(data)
 ```
 
-### 错误处理模式
+### 异常处理模式
 
-**Must 模式 - 出错时 panic：**
+**Must 模式 - 异常时 panic：**
+
 ```go
 result := neatjson.TAB.Must().S(data)
 ```
 
-**Soft 模式 - 出错时记录日志并返回空值：**
+**Soft 模式 - 记录日志并返回空白：**
+
 ```go
 result := neatjson.TAB.Soft().S(data)
 ```
 
-**Omit 模式 - 出错时静默返回空值：**
+**Omit 模式 - 静默返回空白：**
+
 ```go
 result := neatjson.TAB.Omit().S(data)
 ```
@@ -144,21 +156,25 @@ result := neatjson.TAB.Omit().S(data)
 ### 格式化原始 JSON 数据
 
 **字符串到字符串：**
+
 ```go
 formatted := neatjson.TAB.Must().SxS(`{"compact":"json"}`)
 ```
 
 **字节到字节：**
+
 ```go
 formatted := neatjson.SP2.Must().BxB([]byte(`{"raw":"data"}`))
 ```
 
 **字节到字符串：**
+
 ```go
 formatted := neatjson.TAB.Must().SxB(jsonBytes)
 ```
 
 **字符串到字节：**
+
 ```go
 formatted := neatjson.SP4.Must().BxS(jsonString)
 ```
@@ -166,6 +182,7 @@ formatted := neatjson.SP4.Must().BxS(jsonString)
 ### 转换为 JSON 字节
 
 **Go 结构体转 JSON 字节：**
+
 ```go
 type User struct {
 	Name    string `json:"name"`
@@ -175,34 +192,81 @@ user := User{Name: "Alice", Mailbox: "alice@example.com"}
 jsonBytes := neatjson.SP4.Must().B(user)
 ```
 
-### 带返回值的错误处理
+### 带返回值的异常处理
 
-**链式调用并处理错误：**
+**链式调用并处理异常：**
+
 ```go
 result, err := neatjson.TAB.S(complexData)
 if err != nil {
-	// 处理错误
+	// 处理异常
 }
 ```
 
+## API 列表
+
+### 缩进常量
+
+| 常量  | 说明                |
+| ----- | ------------------- |
+| `TAB` | 制表符缩进          |
+| `SP0` | 无缩进              |
+| `SP1` | 1 空格缩进          |
+| `SP2` | 2 空格缩进          |
+| `SP3` | 3 空格缩进          |
+| `SP4` | 4 空格缩进          |
+| `NOI` | 紧凑 JSON（无缩进） |
+| `NON` | 紧凑 JSON（无换行） |
+
+### Neatjson 方法
+
+| 方法                      | 说明                   |
+| ------------------------- | ---------------------- |
+| `S(v)` / `Sjson(v)`       | 结构体转 JSON 字符串   |
+| `B(v)` / `Bytes(v)`       | 结构体转 JSON 字节     |
+| `SxS(s)`                  | 重新格式化 JSON 字符串 |
+| `BxB(data)`               | 重新格式化 JSON 字节   |
+| `SxB(data)` / `B2S(data)` | JSON 字节转字符串      |
+| `BxS(data)` / `S2B(data)` | JSON 字符串转字节      |
+
+### 处理模式
+
+| 方法     | 说明             |
+| -------- | ---------------- |
+| `Must()` | 异常时 panic     |
+| `Soft()` | 记录日志返回空白 |
+| `Omit()` | 静默返回空白     |
+
+### 设计说明
+
+**重新格式化方法在异常时保留源输入：**
+
+`SxS`/`BxB`/`SxB`/`BxS` 在接收到无效 JSON 时返回源输入和异常。数据不会丢失。
+
+```go
+invalidJSON := `{"name": "test",}`  // 尾随逗号 - 无效
+result, e := neatjson.TAB.SxS(invalidJSON)
+// e != nil, result == invalidJSON (源输入安全保留)
+```
+
 <!-- TEMPLATE (ZH) BEGIN: STANDARD PROJECT FOOTER -->
-<!-- VERSION 2025-09-26 07:39:27.188023 +0000 UTC -->
+<!-- VERSION 2025-11-25 03:52:28.131064 +0000 UTC -->
 
 ## 📄 许可证类型
 
-MIT 许可证。详见 [LICENSE](LICENSE)。
+MIT 许可证 - 详见 [LICENSE](LICENSE)。
 
 ---
 
-## 🤝 项目贡献
+## 💬 联系与反馈
 
 非常欢迎贡献代码！报告 BUG、建议功能、贡献代码：
 
-- 🐛 **发现问题？** 在 GitHub 上提交问题并附上重现步骤
-- 💡 **功能建议？** 创建 issue 讨论您的想法
-- 📖 **文档疑惑？** 报告问题，帮助我们改进文档
+- 🐛 **问题报告？** 在 GitHub 上提交问题并附上重现步骤
+- 💡 **新颖思路？** 创建 issue 讨论
+- 📖 **文档疑惑？** 报告问题，帮助我们完善文档
 - 🚀 **需要功能？** 分享使用场景，帮助理解需求
-- ⚡ **性能瓶颈？** 报告慢操作，帮助我们优化性能
+- ⚡ **性能瓶颈？** 报告慢操作，协助解决性能问题
 - 🔧 **配置困扰？** 询问复杂设置的相关问题
 - 📢 **关注进展？** 关注仓库以获取新版本和功能
 - 🌟 **成功案例？** 分享这个包如何改善工作流程
@@ -220,7 +284,7 @@ MIT 许可证。详见 [LICENSE](LICENSE)。
 4. **分支**：创建功能分支（`git checkout -b feature/xxx`）
 5. **编码**：实现您的更改并编写全面的测试
 6. **测试**：（Golang 项目）确保测试通过（`go test ./...`）并遵循 Go 代码风格约定
-7. **文档**：为面向用户的更改更新文档，并使用有意义的提交消息
+7. **文档**：面向用户的更改需要更新文档
 8. **暂存**：暂存更改（`git add .`）
 9. **提交**：提交更改（`git commit -m "Add feature xxx"`）确保向后兼容的代码
 10. **推送**：推送到分支（`git push origin feature/xxx`）
@@ -232,7 +296,7 @@ MIT 许可证。详见 [LICENSE](LICENSE)。
 
 ## 🌟 项目支持
 
-非常欢迎通过提交 Merge Request 和报告问题来为此项目做出贡献。
+非常欢迎通过提交 Merge Request 和报告问题来贡献此项目。
 
 **项目支持：**
 

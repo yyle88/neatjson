@@ -1,3 +1,8 @@
+// Code generated using sure/cls_stub_gen. DO NOT EDIT.
+// This file was auto generated via github.com/yyle88/sure
+// Generated from: sure_stub.gen_test.go:70 -> sures.TestGenMust
+// ========== SURE:DO-NOT-EDIT-SECTION:END ==========
+
 package neatjsonm
 
 import "github.com/yyle88/neatjson"
